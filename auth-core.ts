@@ -55,17 +55,28 @@ function clearSessionTokens() {
 // ── クロスオリジン SSO ──
 
 /**
- * URL ハッシュから SSO トークンを抽出（受信側）
- * 他モジュールから navigateTo() で遷移してきた場合に呼ばれる
+ * URL からSSO トークンを抽出（受信側）
+ * クエリパラメータ（?sso_at=...）→ ハッシュ（#sso_at=...）の順で検索
  */
-function consumeSsoHash(): { at: string; rt: string } | null {
+function consumeSsoTokens(): { at: string; rt: string } | null {
 	if (!browser) return null;
+
+	// 1. クエリパラメータから取得（WOFF内ブラウザ対応）
+	const searchParams = new URLSearchParams(location.search);
+	let at = searchParams.get('sso_at');
+	let rt = searchParams.get('sso_rt');
+	if (at && rt) {
+		// クエリパラメータを即消去（トークンをURL履歴に残さない）
+		history.replaceState(null, '', location.pathname);
+		return { at, rt };
+	}
+
+	// 2. フォールバック: ハッシュから取得（PC版互換）
 	const hash = location.hash;
 	if (!hash.includes('sso_at=')) return null;
-	const params = new URLSearchParams(hash.slice(1));
-	const at = params.get('sso_at');
-	const rt = params.get('sso_rt');
-	// ハッシュを即消去（トークンをURL履歴に残さない）
+	const hashParams = new URLSearchParams(hash.slice(1));
+	at = hashParams.get('sso_at');
+	rt = hashParams.get('sso_rt');
 	history.replaceState(null, '', location.pathname + location.search);
 	if (at && rt) return { at, rt };
 	return null;
@@ -230,7 +241,7 @@ export function createAuth(hooks?: AuthHooks) {
 		if (!browser) return false;
 
 		// ── クロスオリジン SSO: ハッシュからトークンを復元 ──
-		const sso = consumeSsoHash();
+		const sso = consumeSsoTokens();
 		if (sso) {
 			const { data } = await supabase.auth.setSession({
 				access_token: sso.at,
