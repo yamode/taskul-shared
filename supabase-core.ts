@@ -67,6 +67,11 @@ export const ECOSYSTEM_APPS: Record<string, EcosystemApp> = {
 		devUrl: 'https://dev.taskul-shift.pages.dev',
 		prodUrl: 'https://taskul-shift.yamado.app',
 	},
+	admin: {
+		id: 'admin',
+		devUrl: 'https://dev.taskul-admin.pages.dev',
+		prodUrl: 'https://admin.taskul.yamado.app',
+	},
 };
 
 /** エコシステムアプリのURLを取得 */
