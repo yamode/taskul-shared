@@ -54,17 +54,17 @@ export interface EcosystemApp {
 export const ECOSYSTEM_APPS: Record<string, EcosystemApp> = {
 	taskul: {
 		id: 'taskul',
-		devUrl: 'https://dev.taskul.yamado.app',
+		devUrl: 'https://dev.taskul.pages.dev',
 		prodUrl: 'https://taskul.yamado.app',
 	},
 	hr: {
 		id: 'hr',
-		devUrl: 'https://dev.taskul-hr.yamado.app',
+		devUrl: 'https://dev.taskul-hr.pages.dev',
 		prodUrl: 'https://taskul-hr.yamado.app',
 	},
 	shift: {
 		id: 'shift',
-		devUrl: 'https://dev.taskul-shift.yamado.app',
+		devUrl: 'https://dev.taskul-shift.pages.dev',
 		prodUrl: 'https://taskul-shift.yamado.app',
 	},
 };
